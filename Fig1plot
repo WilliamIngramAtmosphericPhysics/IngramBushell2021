@@ -1,0 +1,79 @@
+#  This file is https://github.com/WilliamIngramAtmosphericPhysics/IngramBushell2021/Fig1plot
+#  python code to read from 2 text files CMIP5 & CMIP6 GCM ECSs & vertical resolutions, & indices for comparisons of specific models, & set up variables for plotting & calculating correlation coefficients.
+import numpy as np, matplotlib.pyplot as plt, scipy.stats
+#  Fig1points's whitespace-separated columns are model name (0) & ECS (1) (columns 0 & 2 of https://github.com/mzelinka/cmip56_forcing_feedback_ecs), number of levels (2) & estimated number of notional degrees of freedom in the horizontal (3), CMIP5 then CMIP6.
+in_file = open('Fig1points') ;  all_lines = in_file.readlines() ;  in_file.close() ;  ll=[line.split() for line in all_lines]
+#  Fig1connexions's whitespace-separated columns are indices for the groups of models to be averaged (maybe only 1) for a CMIP5 start of an arrow (0), the same for the CMIP6 end of the arrow (1), & then a short explanation.  Vertical resolution cases to be used, then the ones not used for completeness, then both the same for horizontal resolution.
+in_file = open('Fig1connexions') ;  all_lines = in_file.readlines() ;  in_file.close() ;  nn=[line.split() for line in all_lines]
+#  The lines with the relevant numbers follow the lines '# CMIP5:' & '# CMIP6:' & continue till the next # or the end
+cmip5=ll[ll.index(['#','CMIP5:'])+1:] ;  cmip5=cmip5[:cmip5.index(['#'])]
+cmip6=ll[ll.index(['#','CMIP6:'])+1:]
+#  Convert the ECS & resolution columns into numerical arrays & make the 2D horizontal number more comparable:
+c5ecs=np.array([line[1] for line in cmip5]).astype(np.float) ;  c6ecs=np.array([line[1] for line in cmip6]).astype(np.float)
+l5all=np.array([line[2] for line in cmip5]).astype(np.int) ;  l6all=np.array([line[2] for line in cmip6]).astype(np.int)
+h5all=np.sqrt(np.array([line[3] for line in cmip5]).astype(np.float)) ;  h6all=np.sqrt(np.array([line[3] for line in cmip6]).astype(np.float))
+#  Number of arrows (cases where a CMIP5 GCM or the average of more than 1 is to be compared with a CMIP6 GCM or the average of more than 1 from the same development team) on the "vertical" & "horizontal" plots.  Since which GCM(s) is/are compared depends on the relevant resolution the lists are different.
+s5=[i for i in range(len(nn)) if nn[i][0]=='#' and '1' in nn[i] and 'For' in nn[i] and 'comparing' in nn[i]][0]+1
+nav=nn[s5:].index(['#'])
+s6=[i for i in range(len(nn)) if nn[i][0]=='#' and '3' in nn[i]][0]+1
+nah=nn[s6:].index(['#'])
+i5v=[line[0] for line in nn[s5:s5+nav]] ;  i6v=[line[1] for line in nn[s5:s5+nav]]
+i5h=[line[0] for line in nn[s6:s6+nah]] ;  i6h=[line[1] for line in nn[s6:s6+nah]]
+#  For each arrow/comparison, extract the indices for each end of the arrow & average both quantities both times:
+l5v=np.array([]) ;  l6v=np.array([]) ;  ecs5v=np.array([]) ;  ecs6v=np.array([])
+for j in range(nav):
+  i=np.array(i5v[j].split(",")).astype(np.int)
+  l5v=np.append(l5v,np.mean([l5all[jj] for jj in i]))
+  ecs5v=np.append(ecs5v,np.mean([c5ecs[jj] for jj in i]))
+  i=np.array(i6v[j].split(",")).astype(np.int)
+  l6v=np.append(l6v,np.mean([l6all[jj] for jj in i]))
+  ecs6v=np.append(ecs6v,np.mean([c6ecs[jj] for jj in i]))
+h5h=np.array([]) ;  h6h=np.array([]) ;  ecs5h=np.array([]) ;  ecs6h=np.array([])
+for j in range(nah):
+  i=np.array(i5h[j].split(",")).astype(np.int)
+  ecs5h=np.append(ecs5h,np.mean([c5ecs[jj] for jj in i]))
+  h5h=np.append(h5h,np.mean([h5all[jj] for jj in i]))
+  i=np.array(i6h[j].split(",")).astype(np.int)
+  ecs6h=np.append(ecs6h,np.mean([c6ecs[jj] for jj in i]))
+  h6h=np.append(h6h,np.mean([h6all[jj] for jj in i]))
+#  And calculate the means, which are also plotted: 
+c5ecsm, l5allm, h5allm = np.mean(c5ecs), np.mean(l5all), np.mean(h5all)
+c6ecsm, l6allm, h6allm = np.mean(c6ecs), np.mean(l6all), np.mean(h6all)
+l5vm, ecs5vm, h5hm, ecs5hm = np.mean(l5v), np.mean(ecs5v), np.mean(h5h), np.mean(ecs5h)
+l6vm, ecs6vm, h6hm, ecs6hm = np.mean(l6v), np.mean(ecs6v), np.mean(h6h), np.mean(ecs6h)
+#  And print correlation coefficients & significance levels:
+print('Pearson correlation coefficient, & its notional significance, between ECS & number of levels for all the CMIP5 GCMs, for all the CMIP6 ones, & for all combined:')
+print(scipy.stats.pearsonr(l5all, c5ecs), scipy.stats.pearsonr(l6all, c6ecs), scipy.stats.pearsonr(np.append(l5all,l6all), np.append(c5ecs,c6ecs)))
+# ((0.17564746267935138, 0.3620860982254801), (0.45693439581666351, 0.0014118525463665938), (0.4452923420088537, 6.2508567519637288e-05))
+print('Pearson correlation coefficient, & its notional significance, between ECS & number of points in the horizontal for all the CMIP5 GCMs, for all the CMIP6 ones, & for all combined:')
+print(scipy.stats.pearsonr(h5all, c5ecs), scipy.stats.pearsonr(h6all, c6ecs), scipy.stats.pearsonr(np.append(h5all,h6all), np.append(c5ecs,c6ecs)))
+print('And between the changes from CMIP5 to CMIP6 in ECS and in number of levels in the "same" GCM, & between the changes in ECS and in number of points in the horizontal:')
+print(scipy.stats.pearsonr(l6v-l5v, ecs6v-ecs5v), scipy.stats.pearsonr(h6h-h5h, ecs6h-ecs5h))
+ECSK='Effective Climate Sensitivity (K)'
+#  Plot ECS v number of levels for all cases:
+dummy=plt.figure(figsize=(9.,8.)) ;  dummy=plt.subplot(221) ;  dummy=plt.scatter(l5all, c5ecs, marker='+', s=50) ;  dummy=plt.scatter(l6all, c6ecs, marker='x', color='darkorange', s=50,linewidths=1.3)
+#  Plot the mean markers last throughout:
+dummy=plt.scatter(l5allm, c5ecsm, marker='+', color='blue', s=400) ;  dummy=plt.scatter(l5allm, c5ecsm, marker='o', color='blue', s=400, facecolors='none')
+dummy=plt.scatter(l6allm, c6ecsm, marker='x', color='darkorange', s=240,linewidths=1.3) ;  dummy=plt.scatter(l6allm, c6ecsm, marker='o', color='darkorange', s=400, facecolors='none')
+dummy=plt.xlim([0.,100.]) ;  dummy=plt.ylim([0.,6.]) ;  dummy=plt.xlabel('Number of levels') ;  dummy=plt.ylabel(ECSK)
+#  Plot ECS v estimated number of horizontal degrees of freedom per dimension for all cases:
+dummy=plt.subplot(223) ;  dummy=plt.scatter(h5all, c5ecs, marker='+', s=50) ;  dummy=plt.scatter(h6all, c6ecs, marker='x', color='darkorange', s=50,linewidths=1.3)
+dummy=plt.scatter(h5allm, c5ecsm, marker='+', color='blue', s=400) ;  dummy=plt.scatter(h5allm, c5ecsm, marker='o', color='blue', s=400, facecolors='none')
+dummy=plt.scatter(h6allm, c6ecsm, marker='x', color='darkorange', s=240,linewidths=1.3) ;  dummy=plt.scatter(h6allm, c6ecsm, marker='o', color='darkorange', s=400, facecolors='none')
+dummy=plt.xlim([0.,400.]) ;  dummy=plt.ylim([0.,6.]) ;  dummy=plt.xlabel('Number of points in the horizontal') ;  dummy=plt.ylabel(ECSK)
+#  Plot changes from CMIP5 to CMIP6 of ECS v number of levels for cases when there are models in both from the same development team:
+dummy=plt.subplot(222)
+for j in range(nav): dummy=plt.annotate("", (l6v[j],ecs6v[j]), (l5v[j],ecs5v[j]), arrowprops=dict(arrowstyle="-", color='gray'))  #  Plot the arrows 1st to make the markers more visible
+dummy=plt.scatter(l5v, ecs5v, marker='+', s=50) ;  dummy=plt.scatter(l6v, ecs6v, marker='x', color='darkorange', s=50,linewidths=1.3)  
+dummy=plt.annotate("", (l6vm, ecs6vm), (l5vm, ecs5vm), arrowprops=dict(arrowstyle="->"))
+dummy=plt.scatter(l5vm, ecs5vm, marker='+', color='blue', s=400) ;  dummy=plt.scatter(l5vm, ecs5vm, marker='o', color='blue', s=400, facecolors='none')
+dummy=plt.scatter(l6vm, ecs6vm, marker='x', color='darkorange', s=240,linewidths=1.3) ;  dummy=plt.scatter(l6vm, ecs6vm, marker='o', color='darkorange', s=400, facecolors='none')
+dummy=plt.xlim([0.,100.]) ;  dummy=plt.ylim([0.,6.]) ;  dummy=plt.xlabel('Number of levels') ;  dummy=plt.ylabel(ECSK)
+#  Plot changes from CMIP5 to CMIP6 of ECS v estimated number of horizontal degrees of freedom per dimension for cases when there are models in both from the same development team:
+dummy=plt.subplot(224)
+for j in range(nah): dummy=plt.annotate("", (h6h[j],ecs6h[j]), (h5h[j],ecs5h[j]), arrowprops=dict(arrowstyle="-", color='gray'))
+dummy=plt.scatter(h5h, ecs5h, marker='+', s=50) ;  dummy=plt.scatter(h6h, ecs6h, marker='x', color='darkorange', s=50,linewidths=1.3) 
+dummy=plt.annotate("", (h6hm, ecs6hm), (h5hm, ecs5hm), arrowprops=dict(arrowstyle="->"))
+dummy=plt.scatter(h5hm, ecs5hm, marker='+', color='blue', s=400) ;  dummy=plt.scatter(h5hm, ecs5hm, marker='o', color='blue', s=400, facecolors='none')
+dummy=plt.scatter(h6hm, ecs6hm, marker='x', color='darkorange', s=240,linewidths=1.3) ;  dummy=plt.scatter(h6hm, ecs6hm, marker='o', color='darkorange', s=400, facecolors='none')
+dummy=plt.xlim([0.,400.]) ;  dummy=plt.ylim([0.,6.]) ;  dummy=plt.xlabel('Number of points in the horizontal') ;  dummy=plt.ylabel(ECSK) ;  dummy=plt.show()
