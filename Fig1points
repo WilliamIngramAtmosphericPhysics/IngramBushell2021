@@ -1,0 +1,91 @@
+#  This file is https://github.com/WilliamIngramAtmosphericPhysics/IngramBushell2021/Fig1points
+#  It contains values used to plot the points on Fig 1 of Ingram & Bushell (2021, GRL).
+#  Whitespace-separated columns are GCM name (0), ECS (1), number of levels (2), estimated number of notional degrees of freedom in the horizontal (3), & then indications of the sources of the information in columns 2 & 3.
+#  Columns 0 & 1 are taken from CMIP5_ECS_ERF_fbks.txt & CMIP6_ECS_ERF_fbks.txt at https://github.com/mzelinka/cmip56_forcing_feedback_ecs (columns 0 & 2 there).
+#  The number of levels is generally unambiguous & clear at least to within +-1.
+#  However, the number of degrees of freedom in the horizontal is not.  Spectral GCMs have a grid resolution as well as a spectral resolution.  GCMs with regular latitude-longitude grids generally have different variables on staggered grids with and without polar rows, but more importantly generally actively reduce the effective E-W resolution near the poles for computational stability.
+#  Perhaps because of this, some modelling groups never seem to have stated their precise horizontal resolution on any definition.
+#  We have aimed at the traditional notional resolution: number of gridpoints for a gridpoint GCM or spectral truncation for a spectral GCM.  Where values for a horizontal dimension of a grid-point GCM are reported that differ by 1 or even 2 (as expected for grids for different variables) we took the most composite (e.g. 144 rather than 143 or 145).
+#  We aimed to extract values independently from the literature and from netcdf metadata (in some CMIP5 GCMs the netcdf metadata did not give original horizontal resolution, when we took the netcdf field dimensions instead if we understood from the literature that this was a grid-point GCM).  In most cases we found exact agreement, or exact agreement between the netcdf & our interpretation of a non-exact statement in the literature in the light of papers about related GCMs.  In most other cases we had not been able to find an exact statement in the literature but the exact values in the netcdf metadata were consistent with our conclusion from the literature and were used.  Where the literature, or the netcdf metadata, provided more than one value there was always one that matched the other data source, which we took.  In one case the netcdf metadata was clearly wrong but otherwise in the few cases where we were not able to confirm values from these two very different sources there were exact values available from the netcdf that we judged to be reliable.
+#  The values in column 3 are therefore thought to be appropriate for our purposes, but other choices could be made.
+#  This version dates to 14/3/21.  It is not planned to update it as more GCMs are added to CMIP6, but corrections may be made.
+#
+# CMIP5:
+ACCESS1-0         3.85     38    27648
+ACCESS1-3         3.55     38    27648
+BNU-ESM           4.04     26    3698 
+CCSM4             2.94     26    55296
+CNRM-CM5          3.25     31    32768
+CSIRO-Mk3-6-0     4.09     18    8192 
+CanESM2           3.70     35    8192 
+FGOALS-g2         3.37     26    7680 
+FGOALS-s2         4.18     26    7396 
+GFDL-CM3          3.95     48    13824
+GFDL-ESM2G        2.43     24    12960
+GFDL-ESM2M        2.44     24    12960
+GISS-E2-H         2.31     40    12960
+GISS-E2-R         2.12     40    12960
+HadGEM2-ES        4.60     38    27648
+IPSL-CM5A-LR      4.13     39    9216 
+IPSL-CM5A-MR      4.11     39    20592
+IPSL-CM5B-LR      2.61     39    9216 
+MIROC-ESM         4.65     80    3698 
+MIROC5            2.71     40    14792
+MPI-ESM-LR        3.63     47    8192 
+MPI-ESM-MR        3.45     95    8192 
+MPI-ESM-P         3.46     47    8192 
+MRI-CGCM3         2.61     48    51200
+NorESM1-M         2.87     26    13824
+NorESM1-ME        2.98     26    13824
+bcc-csm1-1        2.82     26    3698 
+bcc-csm1-1-m      2.89     26    22898
+inmcm4            2.08     21    21600
+#
+# CMIP6:
+ACCESS-CM2        4.66     85    27648
+ACCESS-ESM1-5     3.88     38    27648
+AWI-CM-1-1-MR     3.16     95    32768
+BCC-CSM2-MR       3.02     46    22898
+BCC-ESM1          3.25     26    3698 
+CAMS-CSM1-0       2.29     31    22898
+CESM2             5.15     32    55296
+CESM2-FV2         5.16     32    13824
+CESM2-WACCM       4.68     70    55296
+CESM2-WACCM-FV2   4.80     70    13824
+CIESM             5.63     30    48602
+CMCC-CM2-SR5      3.55     30    55296
+CNRM-CM6-1        4.90     91    32768
+CNRM-CM6-1-HR     4.33     91    259200
+CNRM-ESM2-1       4.79     91    32768
+CanESM5           5.64     49    8192 
+E3SM-1-0          5.31     72    48600
+EC-Earth3         4.26     91    131072
+EC-Earth3-AerChem 3.87     91    131072
+EC-Earth3-Veg     4.33     91    131072
+FGOALS-f3-L       2.98     32    55296
+FGOALS-g3         2.87     26    14400
+GFDL-CM4          3.89     33    55296
+GFDL-ESM4         2.65     49    55296
+GISS-E2-1-G       2.71     40    12960
+GISS-E2-1-H       3.12     40    12960
+GISS-E2-2-G       2.43     40    12960
+HadGEM3-GC31-LL   5.55     85    27648
+HadGEM3-GC31-MM   5.44     85    139968
+IITM-ESM          2.37     64    7938 
+INM-CM4-8         1.83     21    21600
+INM-CM5-0         1.92     73    21600
+IPSL-CM6A-LR      4.70     79    20736
+KACE-1-0-G        4.93     85    27648
+MIROC-ES2L        2.66     40    3698 
+MIROC6            2.60     81    14792
+MPI-ESM-1-2-HAM   2.95     47    8192 
+MPI-ESM1-2-HR     2.98     95    32768
+MPI-ESM1-2-LR     3.03     47    8192 
+MRI-ESM2-0        3.13     80    51200
+NESM3             4.77     47    8192 
+NorCPM1           3.03     26    13824
+NorESM2-LM        2.56     32    13824
+NorESM2-MM        2.49     32    55296
+SAM0-UNICON       3.72     30    55296
+TaiESM1           4.36     30    55296
+UKESM1-0-LL       5.36     85    27648
