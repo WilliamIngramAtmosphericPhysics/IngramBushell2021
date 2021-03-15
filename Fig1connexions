@@ -1,0 +1,61 @@
+#  This file is https://github.com/WilliamIngramAtmosphericPhysics/IngramBushell2021/Fig1connexions
+#  It contains indices used to plot the arrows on Fig 1 of Ingram & Bushell (2021, GRL).
+#  The basic idea is to compare ECS and resolution of the CMIP5 & CMIP6 GCMs from each GCM development team that had GCMs in both rounds.
+#  However most such teams had more than one in either or both round, often at different resolution.  GCMs in the same round with the same resolution are averaged.  Where a team has models of different resolution in just one of these stages of CMIP, both are compared with the single resolution in the other stage.  Where it has different resolutions in both, the two lower-resolution cases are compared & the two higher-resolution cases are compared.  (There is no case where both resolutions in one round are greater than both in the other, or with more than 2 resolutions.)
+#  All this is done separately for vertical & horizontal resolutions.
+#  Whitespace-separated columns are indices for the groups of GCMs to be averaged (maybe only 1) for a CMIP5 start of an arrow (0), the same for the CMIP6 end of the arrow (1), & then a short indication of the comparison.
+#
+# 1  For comparing by number of levels:
+0,1      0       ACCESS unchanged
+0,1      1       ACCESS to L85
+26,27    3       BCC to L46
+26,27    4       BCC unchanged
+3        6,7     CCSM to L32
+3        8,9     CCSM to L70
+4     12,13,14   CNRM
+6        15      CanESM
+7,8      20      FGOALS to L32
+7,8      21      FGOALS unchanged
+12,13  24,25,26  GISS (unchanged)
+14     27,28,46  HadGEM/UKESM
+28       30      INMCM unchanged
+28       31      INMCM to L73
+15,16,17 32      IPSL
+18       35      MIROC L80/L81
+19       34      MIROC L40
+23       39      MRI
+24,25    41      Nor unchanged
+24,25   42,43    Nor to L32
+#
+# 2  Omitted from comparing by number of levels because of acknowledged deliberate tuning of climate sensitivity:
+9       23       GFDL L48/49
+10,11   22       GFDL lower vertical resolution
+20,22  36,38     MPI L47
+21      37       MPI L95
+#
+# 3  For comparing by estimated horizontal resolution:
+0,1     0,1      ACCESS
+26       4       BCC T42
+27       3       BCC higher resolution but gets lower
+3       6,8      CCSM unchanged
+3       7,9      CCSM to lower
+4      12,14     CNRM unchanged
+4        13      CNRM to T359
+6        15      CanESM (unchanged)
+7,8     20,21    FGOALS, 2 at each stage but not matching
+12,13  24,25,26  GISS (unchanged)
+14      27,46    HadGEM/UKESM (unchanged)
+14       28      HadGEM to N216
+28     30,31     INMCM (unchanged)
+15,17    32      IPSL increased resolution
+16       32      IPSL unchanged
+18       34      MIROC T42
+19       35      MIROC T85
+23       39      MRI (unchanged)
+24,25   41,42    Nor unchanged
+24,25    43      Nor to nominal 1'
+#
+# 4  Omitted from comparing by estimated horizontal resolution because of acknowledged deliberate tuning of climate sensitivity:
+9,10,11 22,23    GFDL
+20,21,22 46,48   MPI unchanged
+20,21,22  47     MPI to T127
